@@ -45,7 +45,6 @@ class MyFormState extends State<MyForm> {
   //
   // Nota: Esto es un GlobalKey<FormState>, no un GlobalKey<MyCustomFormState>!
   final _formKey = GlobalKey<FormState>();
-  final dateFormat = DateFormat("EEEE, MMMM d, yyyy 'at' h:mma");
   DateTime date;
 
   @override
@@ -56,20 +55,14 @@ class MyFormState extends State<MyForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          //TODO: Padding dels tres camps de cerca, i un border pa que este bonito
           addCityForm(),
           addGenreForm(),
-
-          DateTimeField(
-            format: dateFormat,
-            decoration: InputDecoration(labelText: 'Date'),
-            onChanged: (dt) => setState(() => date = dt), onShowPicker: (BuildContext context, DateTime currentValue) {},
-          ),
-          SizedBox(height: 16.0),
-          Text('date.toString(): $date', style: TextStyle(fontSize: 18.0)),
-          SizedBox(height: 16.0),
+          addDateField(),
 
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
             child: RaisedButton(
               onPressed: () {
                 // devolverá true si el formulario es válido, o falso si
@@ -94,6 +87,14 @@ class MyFormState extends State<MyForm> {
         icon: ImageIcon(
             AssetImage("images/city.png")
         ),
+        contentPadding: EdgeInsets.all(10.0),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFF212121)),
+
+        ),
+
+
+
         /*
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(18.0),
@@ -103,6 +104,7 @@ class MyFormState extends State<MyForm> {
         hintText: 'Write a city name',
         labelText: 'City',
       ),
+
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter some text';
@@ -130,6 +132,33 @@ class MyFormState extends State<MyForm> {
         if (value.isEmpty) {
           return 'Please enter some text';
         }
+      },
+    );
+  }
+
+  addDateField() {
+    final format = DateFormat("yyyy-MM-dd");
+    return DateTimeField(
+      decoration: const InputDecoration(
+        icon: ImageIcon(
+            AssetImage("images/calendar.png")
+        ),
+        /*
+              border: new OutlineInputBorder(
+                borderRadius: new BorderRadius.circular(18.0),
+                borderSide: new BorderSide()
+              ),
+               */
+        hintText: 'Select a date',
+        labelText: 'Date',
+      ),
+      format: format,
+      onShowPicker: (context, currentValue) {
+        return showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100));
       },
     );
   }

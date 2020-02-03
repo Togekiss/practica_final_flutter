@@ -3,8 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'model/classes.dart';
-import 'model/second_screen_widgets.dart';
+import 'model/genres.dart';
 
 
 class SecondScreen extends StatefulWidget{
@@ -53,6 +52,7 @@ class MyFormState extends State<MyForm> {
 
 
   Item selectedUser;
+  Item selectedSubGenre;
 
   List<Item> users = <Item>[
     const Item('Arts & Theatre', "KZFzniwnSyZfZ7v7na", color:  const Color(0xFF167F67),),
@@ -62,6 +62,7 @@ class MyFormState extends State<MyForm> {
     const Item('Undefined', "KZFzniwnSyZfZ7v7nl", color:  const Color(0xFF167F67),),
   ];
 
+  List<Item> genresList = <Item>[];
 
   final _formKey = GlobalKey<FormState>();
 
@@ -91,6 +92,7 @@ class MyFormState extends State<MyForm> {
 
           //KeyValuePairDropdown(),
           genreDropDown(),
+          subGenreDropDown(),
           addCityForm(),
           addGenreForm(),
           addStartDateField(),
@@ -246,12 +248,13 @@ class MyFormState extends State<MyForm> {
     );
   }
 
-
   genreDropDown() {
     return DropdownButton<Item>(
       hint:  Text("Select item"),
       value: selectedUser,
       onChanged: (Item Value) {
+        selectedSubGenre = null;
+        print("emptying genreslist");
         setState(() {
           selectedCat = Value.id;
           selectedUser = Value;
@@ -276,17 +279,33 @@ class MyFormState extends State<MyForm> {
     );
   }
 
+  subGenreDropDown() {
+    return DropdownButton<Item>(
+      hint:  Text("Select item"),
+      value: selectedSubGenre,
+      onChanged: (Item Value) {
+        setState(() {
+          selectedSubGenre = Value;
+        });
+      },
+      items: genresList.map((Item subgenre) {
+        return  DropdownMenuItem<Item>(
+          value: subgenre,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 10,),
+              Text(
+                subgenre.name,
+                style:  TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   dynamic callAPIEvents() async {
-    /*
-    print(city);
-    print(genre);
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(startDate);
-    print(formattedDate);
-    formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(endDate);
-    print(formattedDate);
-
-     */
-
     String apiCall = BASE_EVENTS_API + SIZE_API_FLAG + "10" + API_FLAG + COUNTRY_API_FLAG + city;
     print(apiCall);
     var response = await http.get(
@@ -316,8 +335,6 @@ class MyFormState extends State<MyForm> {
 
   void midGenreApiCall() {
     callAPIGenres().then((value) {
-      print("cat returned: ");
-      print(value);
       // Run extra code here
     }, onError: (error) {
       print(error);
@@ -326,8 +343,6 @@ class MyFormState extends State<MyForm> {
 
   dynamic callAPIGenres() async {
     String apiCall = BASE_GENRE_API + selectedCat + ".json?" + API_FLAG;
-    print(apiCall);
-    print(apiCall);
     var response = await http.get(
         Uri.encodeFull(apiCall),
         headers: {"Accept": "application/json"}
@@ -338,6 +353,14 @@ class MyFormState extends State<MyForm> {
       data = json.decode(response.body);
     });
 
+    var genreDecoder = GenresDecoder.fromJson(data);
+
+    genresList = <Item>[];
+    for (Genres g in genreDecoder.segment.eEmbedded.genres) {
+      genresList.add(new Item(g.name, g.id));
+    }
+
     return data;
   }
+
 }

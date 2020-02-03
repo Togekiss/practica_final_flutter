@@ -41,10 +41,15 @@ class _FirstScreen extends State<FirstScreen> {
                     icon: const Icon(Icons.add_circle),
                     tooltip: 'Add new entry',
                     onPressed: () async {
-                      await Navigator.push(context, new MaterialPageRoute(
+                      var apiResults = await Navigator.push(context, new MaterialPageRoute(
                         builder: (BuildContext context) => new SecondScreen(),
                         fullscreenDialog: true,)
                       );
+                      if (apiResults != null){
+                        //add task
+                        print("First screen got the shit");
+                        print(apiResults);
+                      }
                     },
                   ),
                 ],

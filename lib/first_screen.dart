@@ -7,13 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 
 class EventData {
-  const EventData(this.name, this.URL, this.imageURL, this.dateTime, this.location, this.fav, {Color color});
+  EventData(this.name, this.URL, this.imageURL, this.dateTime, this.location, this.fav, {Color color});
   final String imageURL;
   final String name;
   final String location;
   final String dateTime;
   final String URL;
-  final bool fav;
+  bool fav;
 }
 
 class FirstScreen extends StatefulWidget{
@@ -27,7 +27,7 @@ class FirstScreen extends StatefulWidget{
 class _FirstScreen extends State<FirstScreen> {
 
   List<EventData> eventList = <EventData>[];
-  final List<bool> favEvents = new List();
+  final List<EventData> favEvents = new List();
   var numFavs = 0;
 
   @override
@@ -75,8 +75,8 @@ class _FirstScreen extends State<FirstScreen> {
           body: TabBarView(
             children: [
               //new aux(eventList),
-              firstTab(),
-              SecondTab(),
+              searchResultsTab(),
+              favouritesTab(),
             ],
           ),
         ),
@@ -84,7 +84,7 @@ class _FirstScreen extends State<FirstScreen> {
     );
   }
 
-  firstTab() {
+  searchResultsTab() {
     return Container(
       child: ListView.separated(
         padding: const EdgeInsets.all(8),
@@ -93,7 +93,7 @@ class _FirstScreen extends State<FirstScreen> {
           return Container(
             //color: Colors.amber[colorCodes[index]],
             child: Center(child: Container(
-              child: fillSingleCell(eventList[index]),
+              child: fillSingleCell(eventList[index], false),
             )),
           );
         },
@@ -102,65 +102,83 @@ class _FirstScreen extends State<FirstScreen> {
     );
   }
 
-  fillSingleCell(EventData event) {
+  fillSingleCell(EventData event, bool fav) {
     //TODO: Colocar cada element al lloc corresponent
     return Container(
         child: Column(
           children: <Widget>[
-            ifFilled(event.imageURL, 0),
-            ifFilled(event.name, 1),
-            ifFilled(event.location, 1),
-            ifFilled(event.dateTime, 1),
-            ifFilled(event.URL, 1),
-            ifFilled(event.fav.toString(), 2),
+            insertImage(event.imageURL, event.URL),
+            insertText(event.name),
+            insertText(event.location),
+            insertText(event.dateTime),
+            insertFav(fav, event),
           ],
         )
     );
   }
 
-  ifFilled(String text, int type){
-    if (text != null && type == 0){
-      return Image.network(text);
-
-    }else if (text != null && type == 1){
+  insertImage(String imageURL, String url) {
+    if(imageURL != null && url != null){
       return GestureDetector(
         onTap: (){
-          _launchURL();
-          print("tabby boi");
+          _launchURL(url);
         },
-        child: Text(text),
+        child: Image.network(imageURL),
       );
-    }else if(text != null && type == 2){
-      return Icon(Icons.favorite_border);
-    }else {
-      return IconButton(
-        icon: const Icon(Icons.favorite_border),
-        onPressed: () async {
-          setState(() {
-            print("got pressed v2");
-          });
-          print("Got pressed");
-          /*
-          var task = await Navigator.push(context, new MaterialPageRoute(
-            builder: (BuildContext context) => new SecondScreen(),
-            fullscreenDialog: true,)
-          );
-          if (task != null){
-            //add task
-            print("task: ");
-            print(task);
-            favEvents.add(task);
-            numFavs++;
-          }
-
-           */
-        },
-      );
+    }else if (imageURL == null && url != null){
+      return Text("Image not available. Event URL: " + url);
+    }else if (imageURL != null && url == null){
+      return Image.network(imageURL);
     }
   }
 
-  _launchURL() async {
-    const url = 'https://flutter.dev';
+  insertText(String text){
+    if (text != null){
+      return Text(text);
+    }else{
+      return (Text("Missing information."));
+    }
+  }
+
+  insertFav(bool fav, EventData event){
+    //esta en el array de favoritos
+    if(fav) {
+      return Container(
+          color: Colors.white // This is optional
+      );
+      //NO esta en el array de favoritos
+    }else{
+      if(event.fav){
+        return IconButton(
+          icon: const Icon(Icons.favorite), onPressed: () {
+            if (event != null) {
+              setState(() {
+                EventData auxEvent = event;
+                auxEvent.fav = !auxEvent.fav;
+                favEvents.add(auxEvent);
+                numFavs++;
+              });
+            }
+          },
+        );
+      }else{
+        return IconButton(
+          icon: const Icon(Icons.favorite_border), onPressed: () {
+          if (event != null) {
+            setState(() {
+              EventData auxEvent = event;
+              auxEvent.fav = !auxEvent.fav;
+              favEvents.add(auxEvent);
+              numFavs++;
+            });
+          }
+        },
+        );
+      }
+    }
+  }
+
+  _launchURL(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -168,16 +186,22 @@ class _FirstScreen extends State<FirstScreen> {
     }
   }
 
-}
-
-
-class SecondTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  favouritesTab() {
     return Container(
-      child: Center(
-        child: Text('Tab 2 Layout'),
+      child: ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: favEvents.length,
+        itemBuilder: (context, int index) {
+          return Container(
+            //color: Colors.amber[colorCodes[index]],
+            child: Center(child: Container(
+              child: fillSingleCell(favEvents[index], true),
+            )),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
     );
   }
+
 }

@@ -112,8 +112,8 @@ class _FirstScreen extends State<FirstScreen> {
     );
   }
 
+  /*
   fillSingleCell(EventData event, bool fav) {
-    //TODO: Colocar cada element al lloc corresponent
     return Container(
         height: 400,
         child: Stack(
@@ -121,8 +121,8 @@ class _FirstScreen extends State<FirstScreen> {
           children: <Widget>[
             FittedBox(
                 fit: BoxFit.cover,
-                child: insertImage(event.imageURL, event.URL)), //fittedbox image
-
+                child: insertImage(event.imageURL, event.URL)),
+            //fittedbox image
             Positioned(
                 bottom: 0,
                 child: Container(
@@ -133,8 +133,7 @@ class _FirstScreen extends State<FirstScreen> {
                     ]) //linear gradient
                         ), //decoration
                     child: Column(children: <Widget>[
-                      Text(
-                          event.name,
+                      Text(event.name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       insertText(event.name),
@@ -143,20 +142,17 @@ class _FirstScreen extends State<FirstScreen> {
                     ] //column children
                         ) //column
                     ) //container
-
-                ), //info positioned
-
-            Positioned(
-                top: 0,
-                right: 0,
-                child: insertFav(fav, event)), //fav positioned
+                ),
+            //info positioned
+            Positioned(top: 0, right: 0, child: insertFav(fav, event)),
+            //fav positioned
           ], //stack children
         ) //big stack
         ); //container
-    //ifFilled(event.URL, 1),
   }
 
-/*
+   */
+
   fillSingleCell(EventData event, bool fav) {
     //TODO: Colocar cada element al lloc corresponent
     return Container(
@@ -172,7 +168,6 @@ class _FirstScreen extends State<FirstScreen> {
     );
   }
   
- */
 
   insertImage(String imageURL, String url) {
     if (imageURL != null && url != null) {
@@ -205,7 +200,8 @@ class _FirstScreen extends State<FirstScreen> {
         onPressed: () {
           if (event != null) {
             setState(() {
-              favEvents.removeAt(numFavs);
+              favEvents.removeAt(favEvents.indexOf(event));
+              eventList.elementAt(eventList.indexOf(event)).fav = false;
               numFavs--;
             });
           }

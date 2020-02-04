@@ -4,16 +4,14 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'model/genres.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 
-class SecondScreen extends StatefulWidget {
+
+class SecondScreen extends StatefulWidget{
   static String tag = 'main-view-controller';
-
-  SecondScreen({Key key}) : super(key: key);
+  SecondScreen ({Key key}): super (key : key);
 
   @override
-  _SecondScreen createState() => new _SecondScreen();
+  _SecondScreen createState()=> new _SecondScreen();
 }
 
 class _SecondScreen extends State<SecondScreen> {
@@ -39,8 +37,7 @@ class MyForm extends StatefulWidget {
 }
 
 class Item {
-  const Item(this.name, this.id, {Color color});
-
+  const Item(this.name,this.id, {Color color});
   final String name;
   final String id;
 }
@@ -53,6 +50,7 @@ class MyFormState extends State<MyForm> {
   //
   // Nota: Esto es un GlobalKey<FormState>, no un GlobalKey<MyCustomFormState>!
 
+
   Item selectedCountry;
   static String selectedCity;
   Item selectedCategory;
@@ -62,265 +60,69 @@ class MyFormState extends State<MyForm> {
   static DateTime endDate;
 
   List<Item> users = <Item>[
-    const Item(
-      'Arts & Theatre',
-      "KZFzniwnSyZfZ7v7na",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      'Music',
-      "KZFzniwnSyZfZ7v7nJ",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      'Sports',
-      "KZFzniwnSyZfZ7v7nE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      'Film',
-      "KZFzniwnSyZfZ7v7nn",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      'Undefined',
-      "KZFzniwnSyZfZ7v7nl",
-      color: const Color(0xFF167F67),
-    ),
+    const Item('Arts & Theatre', "KZFzniwnSyZfZ7v7na", color:  const Color(0xFF167F67),),
+    const Item('Music', "KZFzniwnSyZfZ7v7nJ", color:  const Color(0xFF167F67),),
+    const Item('Sports', "KZFzniwnSyZfZ7v7nE", color:  const Color(0xFF167F67),),
+    const Item('Film', "KZFzniwnSyZfZ7v7nn" ,color:  const Color(0xFF167F67),),
+    const Item('Undefined', "KZFzniwnSyZfZ7v7nl", color:  const Color(0xFF167F67),),
   ];
 
   List<Item> _country = [
-    const Item(
-      "United States",
-      "US",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Andorra",
-      "AD",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Argentina",
-      "AR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Australia",
-      "AU",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Belgium",
-      "BE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Brazil",
-      "BR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Canada",
-      "CA",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Chile",
-      "CL",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "China",
-      "CH",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Colombia",
-      "CO",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Costa Rica",
-      "CR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Czech Republic",
-      "CZ",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Denmark",
-      "DK",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Dominican Republic",
-      "DO",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Ecuador",
-      "EC",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Finland",
-      "FI",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "France",
-      "FR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Germany",
-      "DE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Great Britain",
-      "GB",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Greece",
-      "GR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Hong Kong",
-      "HK",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "India",
-      "IN",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Ireland",
-      "IE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Italy",
-      "IT",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Japan",
-      "JP",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "South Korea",
-      "KR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Mexico",
-      "MX",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Morocco",
-      "MA",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Netherlands",
-      "NL",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "New Zealand",
-      "NZ",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Norway",
-      "NO",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Peru",
-      "PE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Poland",
-      "PL",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Portugal",
-      "PL",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Russia",
-      "RU",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Saudi Arabia",
-      "SA",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "South Africa",
-      "ZA",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Spain",
-      "ES",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Sweden",
-      "SE",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Switzerland",
-      "CH",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Turkey",
-      "TR",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Ukraine",
-      "UA",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Uruguay",
-      "UY",
-      color: const Color(0xFF167F67),
-    ),
-    const Item(
-      "Venezuela",
-      "VE",
-      color: const Color(0xFF167F67),
-    ),
+    const Item("United States", "US", color:  const Color(0xFF167F67),),
+    const Item("Andorra", "AD", color:  const Color(0xFF167F67),),
+    const Item("Argentina", "AR", color:  const Color(0xFF167F67),),
+    const Item("Australia", "AU", color:  const Color(0xFF167F67),),
+    const Item("Belgium", "BE", color:  const Color(0xFF167F67),),
+    const Item("Brazil", "BR", color:  const Color(0xFF167F67),),
+    const Item("Canada", "CA", color:  const Color(0xFF167F67),),
+    const Item("Chile", "CL", color:  const Color(0xFF167F67),),
+    const Item("China", "CH", color:  const Color(0xFF167F67),),
+    const Item("Colombia", "CO", color:  const Color(0xFF167F67),),
+    const Item("Costa Rica", "CR", color:  const Color(0xFF167F67),),
+    const Item("Czech Republic", "CZ", color:  const Color(0xFF167F67),),
+    const Item("Denmark", "DK", color:  const Color(0xFF167F67),),
+    const Item("Dominican Republic", "DO", color:  const Color(0xFF167F67),),
+    const Item("Ecuador", "EC", color:  const Color(0xFF167F67),),
+    const Item("Finland", "FI", color:  const Color(0xFF167F67),),
+    const Item("France", "FR", color:  const Color(0xFF167F67),),
+    const Item("Germany", "DE", color:  const Color(0xFF167F67),),
+    const Item("Great Britain", "GB", color:  const Color(0xFF167F67),),
+    const Item("Greece", "GR", color:  const Color(0xFF167F67),),
+    const Item("Hong Kong", "HK", color:  const Color(0xFF167F67),),
+    const Item("India", "IN", color:  const Color(0xFF167F67),),
+    const Item("Ireland", "IE", color:  const Color(0xFF167F67),),
+    const Item("Italy", "IT", color:  const Color(0xFF167F67),),
+    const Item("Japan", "JP", color:  const Color(0xFF167F67),),
+    const Item("South Korea", "KR", color:  const Color(0xFF167F67),),
+    const Item("Mexico", "MX", color:  const Color(0xFF167F67),),
+    const Item("Morocco", "MA", color:  const Color(0xFF167F67),),
+    const Item("Netherlands", "NL", color:  const Color(0xFF167F67),),
+    const Item("New Zealand", "NZ", color:  const Color(0xFF167F67),),
+    const Item("Norway", "NO", color:  const Color(0xFF167F67),),
+    const Item("Peru", "PE", color:  const Color(0xFF167F67),),
+    const Item("Poland", "PL", color:  const Color(0xFF167F67),),
+    const Item("Portugal", "PL", color:  const Color(0xFF167F67),),
+    const Item("Russia", "RU", color:  const Color(0xFF167F67),),
+    const Item("Saudi Arabia", "SA", color:  const Color(0xFF167F67),),
+    const Item("South Africa", "ZA", color:  const Color(0xFF167F67),),
+    const Item("Spain", "ES", color:  const Color(0xFF167F67),),
+    const Item("Sweden", "SE", color:  const Color(0xFF167F67),),
+    const Item("Switzerland", "CH", color:  const Color(0xFF167F67),),
+    const Item("Turkey", "TR", color:  const Color(0xFF167F67),),
+    const Item("Ukraine", "UA", color:  const Color(0xFF167F67),),
+    const Item("Uruguay", "UY", color:  const Color(0xFF167F67),),
+    const Item("Venezuela", "VE", color:  const Color(0xFF167F67),),
   ];
+
+
 
   List<Item> genresList = <Item>[];
 
   final _formKey = GlobalKey<FormState>();
 
   static const String API_KEY = "wr5ynMSsGG9XotdznZnMhXL53ArluVoE";
-  static const BASE_EVENTS_API =
-      "https://app.ticketmaster.com/discovery/v2/events.json?";
-  static const BASE_GENRE_API =
-      "https://app.ticketmaster.com/discovery/v2/classifications/";
+  static const BASE_EVENTS_API = "https://app.ticketmaster.com/discovery/v2/events.json?";
+  static const BASE_GENRE_API = "https://app.ticketmaster.com/discovery/v2/classifications/";
   static const SIZE_FLAG = "&size=";
   static const API_FLAG = "&apikey=" + API_KEY;
   static const COUNTRY_FLAG = "&countryCode=";
@@ -328,6 +130,7 @@ class MyFormState extends State<MyForm> {
   static const CATEGORY_FLAG = "&categoryId=";
   static const GENRE_FLAG = "&genreId=";
   static const KEYWORD_FLAG = "&keyword=";
+
 
   @override
   Widget build(BuildContext context) {
@@ -337,7 +140,6 @@ class MyFormState extends State<MyForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          //TODO: Padding dels tres camps de cerca, i un border pa que este bonito
 
           //KeyValuePairDropdown(),
           addCountryForm(),
@@ -350,16 +152,15 @@ class MyFormState extends State<MyForm> {
           addEndDateField(),
 
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
             child: RaisedButton(
               onPressed: () {
                 // devolverá true si el formulario es válido, o falso si
                 // el formulario no es válido.
                 if (_formKey.currentState.validate()) {
                   // Si el formulario es válido, queremos mostrar un Snackbar
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Loading search results...')));
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text('Processing Data')));
                   midEventsApiCall();
                 }
               },
@@ -415,11 +216,16 @@ class MyFormState extends State<MyForm> {
   addCityForm() {
     return TextFormField(
       decoration: const InputDecoration(
-        icon: ImageIcon(AssetImage("images/city.png")),
+        icon: ImageIcon(
+            AssetImage("images/city.png")
+        ),
+        /*
         contentPadding: EdgeInsets.all(10.0),
-        /*enabledBorder: OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Color(0xFF212121)),
-        ),*/
+
+        ),
+         */
         /*
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(18.0),
@@ -429,6 +235,10 @@ class MyFormState extends State<MyForm> {
         hintText: 'Write a city name',
         labelText: 'City',
       ),
+
+      validator: (value) {
+        selectedCity = value;
+      },
     );
   }
 
@@ -536,7 +346,9 @@ class MyFormState extends State<MyForm> {
     final format = DateFormat("yyyy-MM-dd");
     return DateTimeField(
       decoration: const InputDecoration(
-        icon: ImageIcon(AssetImage("images/calendar.png")),
+        icon: ImageIcon(
+            AssetImage("images/calendar.png")
+        ),
         hintText: 'Select a date',
         labelText: 'Date',
       ),
@@ -549,13 +361,7 @@ class MyFormState extends State<MyForm> {
             lastDate: DateTime(2100));
       },
       validator: (value) {
-        final now = DateTime.now();
-        final yesterdayDate = new DateTime(now.year, now.month, now.day - 1);
-        if (value.isBefore(yesterdayDate)) {
-          return 'Date must not be in the past.';
-        } else {
-          startDate = value;
-        }
+        startDate = value;
       },
     );
   }
@@ -564,7 +370,9 @@ class MyFormState extends State<MyForm> {
     final format = DateFormat("yyyy-MM-dd");
     return DateTimeField(
       decoration: const InputDecoration(
-        icon: ImageIcon(AssetImage("images/calendar.png")),
+        icon: ImageIcon(
+            AssetImage("images/calendar.png")
+        ),
         hintText: 'Select a date',
         labelText: 'Date',
       ),
@@ -583,21 +391,12 @@ class MyFormState extends State<MyForm> {
   }
 
   dynamic callAPIEvents() async {
-    String apiCall = BASE_EVENTS_API +
-        SIZE_FLAG +
-        "10" +
-        API_FLAG +
-        COUNTRY_FLAG +
-        selectedCountry.id +
-        CITY_FLAG +
-        selectedCity +
-        CATEGORY_FLAG +
-        selectedCategory.id +
-        GENRE_FLAG +
-        selectedGenre.id;
+    String apiCall = BASE_EVENTS_API + SIZE_FLAG + "10" + API_FLAG + COUNTRY_FLAG + selectedCountry.id + CITY_FLAG + selectedCity + CATEGORY_FLAG + selectedCategory.id + GENRE_FLAG + selectedGenre.id;
     print(apiCall);
-    var response = await http
-        .get(Uri.encodeFull(apiCall), headers: {"Accept": "application/json"});
+    var response = await http.get(
+        Uri.encodeFull(apiCall),
+        headers: {"Accept": "application/json"}
+    );
 
     var data;
     setState(() {
@@ -628,8 +427,10 @@ class MyFormState extends State<MyForm> {
 
   dynamic callAPIGenres() async {
     String apiCall = BASE_GENRE_API + selectedCategory.id + ".json?" + API_FLAG;
-    var response = await http
-        .get(Uri.encodeFull(apiCall), headers: {"Accept": "application/json"});
+    var response = await http.get(
+        Uri.encodeFull(apiCall),
+        headers: {"Accept": "application/json"}
+    );
 
     var data;
     setState(() {
@@ -645,4 +446,5 @@ class MyFormState extends State<MyForm> {
 
     return data;
   }
+
 }

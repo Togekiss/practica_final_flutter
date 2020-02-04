@@ -103,55 +103,97 @@ class _FirstScreen extends State<FirstScreen> {
             //color: Colors.amber[colorCodes[index]],
             child: Center(
                 child: Container(
-              child: fillSingleCell(eventList[index], false),
-            )),
+                  child: fillSingleCell(eventList[index], false),
+                )),
           );
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
     );
   }
-
   /*
+
   fillSingleCell(EventData event, bool fav) {
     return Container(
-        height: 400,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
         child: Stack(
           fit: StackFit.loose,
           children: <Widget>[
             FittedBox(
                 fit: BoxFit.cover,
-                child: insertImage(event.imageURL, event.URL)),
-            //fittedbox image
+                child: insertImage(event.imageURL, event.URL)
+            ), //fittedbox image
             Positioned(
                 bottom: 0,
                 child: Container(
                     decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
-                      Colors.transparent,
-                      Colors.black
-                    ]) //linear gradient
-                        ), //decoration
-                    child: Column(children: <Widget>[
-                      Text(event.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      insertText(event.name),
-                      insertText(event.location),
-                      insertText(event.dateTime),
-                    ] //column children
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.8)
+                          ]
+                      ), //linear gradient
+                    ), //decoration
+                    child: Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Column(
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Text(
+                                      insertText(event.name),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                         // style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0)
+                                      ) //text style
+                                  ) //text
+                              ), //text padding
+                              Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                        child: Text(
+                                            insertText(event.location),
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white
+                                            ) //text style
+                                        ) //text
+                                    ), //expanded
+                                    Text(
+                                        insertText(event.dateTime),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                        ) //text style
+                                    ) //text
+                                  ] //row children
+                              ) //row
+                            ] //column children
                         ) //column
-                    ) //container
-                ),
-            //info positioned
-            Positioned(top: 0, right: 0, child: insertFav(fav, event)),
-            //fav positioned
+                    ) //column padding
+                ) //container
+            ), //info positioned
+            Positioned(
+                top: 0,
+                right: 0,
+                child: insertFav(fav, event)
+            ) //fav positioned
           ], //stack children
         ) //big stack
-        ); //container
+    ); //container
   }
 
-   */
+*/
 
   fillSingleCell(EventData event, bool fav) {
     //TODO: Colocar cada element al lloc corresponent
@@ -167,7 +209,8 @@ class _FirstScreen extends State<FirstScreen> {
         )
     );
   }
-  
+
+
 
   insertImage(String imageURL, String url) {
     if (imageURL != null && url != null) {
@@ -201,7 +244,9 @@ class _FirstScreen extends State<FirstScreen> {
           if (event != null) {
             setState(() {
               favEvents.removeAt(favEvents.indexOf(event));
-              eventList.elementAt(eventList.indexOf(event)).fav = false;
+              eventList
+                  .elementAt(eventList.indexOf(event))
+                  .fav = false;
               numFavs--;
             });
           }
@@ -259,8 +304,8 @@ class _FirstScreen extends State<FirstScreen> {
             //color: Colors.amber[colorCodes[index]],
             child: Center(
                 child: Container(
-              child: fillSingleCell(favEvents[index], true),
-            )),
+                  child: fillSingleCell(favEvents[index], true),
+                )),
           );
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),

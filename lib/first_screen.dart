@@ -5,9 +5,11 @@ import 'second_screen.dart';
 import 'model/EventsDecoder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class EventData {
-  EventData(this.name, this.URL, this.imageURL, this.dateTime, this.location, this.fav, {Color color});
+  EventData(this.name, this.URL, this.imageURL, this.dateTime, this.location,
+      this.fav,
+      {Color color});
+
   final String imageURL;
   final String name;
   final String location;
@@ -16,23 +18,22 @@ class EventData {
   bool fav;
 }
 
-class FirstScreen extends StatefulWidget{
+class FirstScreen extends StatefulWidget {
   static String tag = 'main-view-controller';
-  FirstScreen ({Key key}): super (key : key);
+
+  FirstScreen({Key key}) : super(key: key);
 
   @override
-  _FirstScreen createState()=> new _FirstScreen();
+  _FirstScreen createState() => new _FirstScreen();
 }
 
 class _FirstScreen extends State<FirstScreen> {
-
   List<EventData> eventList = <EventData>[];
   final List<EventData> favEvents = new List();
   var numFavs = 0;
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -50,11 +51,13 @@ class _FirstScreen extends State<FirstScreen> {
                 icon: const Icon(Icons.add_circle),
                 tooltip: 'Add new entry',
                 onPressed: () async {
-                  var apiResults = await Navigator.push(context, new MaterialPageRoute(
-                    builder: (BuildContext context) => new SecondScreen(),
-                    fullscreenDialog: true,)
-                  );
-                  if (apiResults != null){
+                  var apiResults = await Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) => new SecondScreen(),
+                        fullscreenDialog: true,
+                      ));
+                  if (apiResults != null) {
                     //add task
                     print("First screen got the shit");
                     //print(apiResults);
@@ -62,11 +65,17 @@ class _FirstScreen extends State<FirstScreen> {
                     eventList = <EventData>[];
 
                     for (Events e in eventsDecoder.eEmbedded.events) {
-                      eventList.add(new EventData(e.name, e.url, e.images[1].url, e.dates.start.dateTime, e.eEmbedded.venues[0].name + ", " + e.eEmbedded.venues[0].city.name, false));
+                      eventList.add(new EventData(
+                          e.name,
+                          e.url,
+                          e.images[1].url,
+                          e.dates.start.dateTime,
+                          e.eEmbedded.venues[0].name +
+                              ", " +
+                              e.eEmbedded.venues[0].city.name,
+                          false));
                     }
-                    setState(() {
-
-                    });
+                    setState(() {});
                   }
                 },
               ),
@@ -92,7 +101,8 @@ class _FirstScreen extends State<FirstScreen> {
         itemBuilder: (context, int index) {
           return Container(
             //color: Colors.amber[colorCodes[index]],
-            child: Center(child: Container(
+            child: Center(
+                child: Container(
               child: fillSingleCell(eventList[index], false),
             )),
           );
@@ -102,6 +112,51 @@ class _FirstScreen extends State<FirstScreen> {
     );
   }
 
+  fillSingleCell(EventData event, bool fav) {
+    //TODO: Colocar cada element al lloc corresponent
+    return Container(
+        height: 400,
+        child: Stack(
+          fit: StackFit.loose,
+          children: <Widget>[
+            FittedBox(
+                fit: BoxFit.cover,
+                child: insertImage(event.imageURL, event.URL)), //fittedbox image
+
+            Positioned(
+                bottom: 0,
+                child: Container(
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                      Colors.transparent,
+                      Colors.black
+                    ]) //linear gradient
+                        ), //decoration
+                    child: Column(children: <Widget>[
+                      Text(
+                          event.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      insertText(event.name),
+                      insertText(event.location),
+                      insertText(event.dateTime),
+                    ] //column children
+                        ) //column
+                    ) //container
+
+                ), //info positioned
+
+            Positioned(
+                top: 0,
+                right: 0,
+                child: insertFav(fav, event)), //fav positioned
+          ], //stack children
+        ) //big stack
+        ); //container
+    //ifFilled(event.URL, 1),
+  }
+
+/*
   fillSingleCell(EventData event, bool fav) {
     //TODO: Colocar cada element al lloc corresponent
     return Container(
@@ -116,41 +171,52 @@ class _FirstScreen extends State<FirstScreen> {
         )
     );
   }
+  
+ */
 
   insertImage(String imageURL, String url) {
-    if(imageURL != null && url != null){
+    if (imageURL != null && url != null) {
       return GestureDetector(
-        onTap: (){
+        onTap: () {
           _launchURL(url);
         },
         child: Image.network(imageURL),
       );
-    }else if (imageURL == null && url != null){
+    } else if (imageURL == null && url != null) {
       return Text("Image not available. Event URL: " + url);
-    }else if (imageURL != null && url == null){
+    } else if (imageURL != null && url == null) {
       return Image.network(imageURL);
     }
   }
 
-  insertText(String text){
-    if (text != null){
+  insertText(String text) {
+    if (text != null) {
       return Text(text);
-    }else{
+    } else {
       return (Text("Missing information."));
     }
   }
 
-  insertFav(bool fav, EventData event){
+  insertFav(bool fav, EventData event) {
     //esta en el array de favoritos
-    if(fav) {
-      return Container(
-          color: Colors.white // This is optional
+    if (fav) {
+      return IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          if (event != null) {
+            setState(() {
+              favEvents.removeAt(numFavs);
+              numFavs--;
+            });
+          }
+        },
       );
       //NO esta en el array de favoritos
-    }else{
-      if(event.fav){
+    } else {
+      if (event.fav) {
         return IconButton(
-          icon: const Icon(Icons.favorite), onPressed: () {
+          icon: const Icon(Icons.favorite),
+          onPressed: () {
             if (event != null) {
               setState(() {
                 EventData auxEvent = event;
@@ -161,18 +227,19 @@ class _FirstScreen extends State<FirstScreen> {
             }
           },
         );
-      }else{
+      } else {
         return IconButton(
-          icon: const Icon(Icons.favorite_border), onPressed: () {
-          if (event != null) {
-            setState(() {
-              EventData auxEvent = event;
-              auxEvent.fav = !auxEvent.fav;
-              favEvents.add(auxEvent);
-              numFavs++;
-            });
-          }
-        },
+          icon: const Icon(Icons.favorite_border),
+          onPressed: () {
+            if (event != null) {
+              setState(() {
+                EventData auxEvent = event;
+                auxEvent.fav = !auxEvent.fav;
+                favEvents.add(auxEvent);
+                numFavs++;
+              });
+            }
+          },
         );
       }
     }
@@ -194,7 +261,8 @@ class _FirstScreen extends State<FirstScreen> {
         itemBuilder: (context, int index) {
           return Container(
             //color: Colors.amber[colorCodes[index]],
-            child: Center(child: Container(
+            child: Center(
+                child: Container(
               child: fillSingleCell(favEvents[index], true),
             )),
           );
@@ -203,5 +271,4 @@ class _FirstScreen extends State<FirstScreen> {
       ),
     );
   }
-
 }

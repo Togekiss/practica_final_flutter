@@ -91,10 +91,11 @@ class MyFormState extends State<MyForm> {
 
 
           //KeyValuePairDropdown(),
+          addCityForm(),
           genreDropDown(),
           subGenreDropDown(),
-          addCityForm(),
-          addGenreForm(),
+
+          addKeyWord(),
           addStartDateField(),
           addEndDateField(),
 
@@ -155,20 +156,18 @@ class MyFormState extends State<MyForm> {
     );
   }
 
-  addGenreForm() {
+  addKeyWord() {
     return TextFormField(
       decoration: const InputDecoration(
-        icon: ImageIcon(
-            AssetImage("images/genre.png")
-        ),
+        icon: Icon(Icons.search),
         /*
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(18.0),
                 borderSide: new BorderSide()
               ),
                */
-        hintText: 'Write an activity genre',
-        labelText: 'Genre',
+        hintText: 'Write a keyword',
+        labelText: 'Keyword',
       ),
       validator: (value) {
         if (value.isEmpty) {
@@ -250,9 +249,11 @@ class MyFormState extends State<MyForm> {
 
   genreDropDown() {
     return DropdownButton<Item>(
-      hint:  Text("Select item"),
+      hint:  Text("Category"),
       value: selectedUser,
       onChanged: (Item Value) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('Processing Data')));
         selectedSubGenre = null;
         print("emptying genreslist");
         setState(() {
@@ -281,7 +282,7 @@ class MyFormState extends State<MyForm> {
 
   subGenreDropDown() {
     return DropdownButton<Item>(
-      hint:  Text("Select item"),
+      hint:  Text("Genre"),
       value: selectedSubGenre,
       onChanged: (Item Value) {
         setState(() {

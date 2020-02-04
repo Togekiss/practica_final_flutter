@@ -153,7 +153,6 @@ class MyFormState extends State<MyForm> {
           addEndDateField(),
 
           Padding(
-
             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
             child: RaisedButton(
               onPressed: () {
@@ -164,7 +163,6 @@ class MyFormState extends State<MyForm> {
                   Scaffold.of(context)
                       .showSnackBar(SnackBar(content: Text('Processing Data')));
                   midEventsApiCall();
-                  callAPIEvents();
                 }
               },
               child: Text('Submit'),
@@ -180,8 +178,6 @@ class MyFormState extends State<MyForm> {
       hint:  Text("Country"),
       value: selectedCountry,
       onChanged: (Item Value) {
-        Scaffold.of(context)
-            .showSnackBar(SnackBar(content: Text('Processing Data')));
         setState(() {
           selectedCountry = Value;
 

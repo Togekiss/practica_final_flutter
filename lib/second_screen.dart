@@ -51,8 +51,13 @@ class MyFormState extends State<MyForm> {
   // Nota: Esto es un GlobalKey<FormState>, no un GlobalKey<MyCustomFormState>!
 
 
-  Item selectedUser;
-  Item selectedSubGenre;
+  Item selectedCountry;
+  static String selectedCity;
+  Item selectedCategory;
+  Item selectedGenre;
+  String selectedKeyword;
+  static DateTime startDate;
+  static DateTime endDate;
 
   List<Item> users = <Item>[
     const Item('Arts & Theatre', "KZFzniwnSyZfZ7v7na", color:  const Color(0xFF167F67),),
@@ -62,6 +67,55 @@ class MyFormState extends State<MyForm> {
     const Item('Undefined', "KZFzniwnSyZfZ7v7nl", color:  const Color(0xFF167F67),),
   ];
 
+  List<Item> _country = [
+    const Item("United States", "US", color:  const Color(0xFF167F67),),
+    const Item("Andorra", "AD", color:  const Color(0xFF167F67),),
+    const Item("Argentina", "AR", color:  const Color(0xFF167F67),),
+    const Item("Australia", "AU", color:  const Color(0xFF167F67),),
+    const Item("Belgium", "BE", color:  const Color(0xFF167F67),),
+    const Item("Brazil", "BR", color:  const Color(0xFF167F67),),
+    const Item("Canada", "CA", color:  const Color(0xFF167F67),),
+    const Item("Chile", "CL", color:  const Color(0xFF167F67),),
+    const Item("China", "CH", color:  const Color(0xFF167F67),),
+    const Item("Colombia", "CO", color:  const Color(0xFF167F67),),
+    const Item("Costa Rica", "CR", color:  const Color(0xFF167F67),),
+    const Item("Czech Republic", "CZ", color:  const Color(0xFF167F67),),
+    const Item("Denmark", "DK", color:  const Color(0xFF167F67),),
+    const Item("Dominican Republic", "DO", color:  const Color(0xFF167F67),),
+    const Item("Ecuador", "EC", color:  const Color(0xFF167F67),),
+    const Item("Finland", "FI", color:  const Color(0xFF167F67),),
+    const Item("France", "FR", color:  const Color(0xFF167F67),),
+    const Item("Germany", "DE", color:  const Color(0xFF167F67),),
+    const Item("Great Britain", "GB", color:  const Color(0xFF167F67),),
+    const Item("Greece", "GR", color:  const Color(0xFF167F67),),
+    const Item("Hong Kong", "HK", color:  const Color(0xFF167F67),),
+    const Item("India", "IN", color:  const Color(0xFF167F67),),
+    const Item("Ireland", "IE", color:  const Color(0xFF167F67),),
+    const Item("Italy", "IT", color:  const Color(0xFF167F67),),
+    const Item("Japan", "JP", color:  const Color(0xFF167F67),),
+    const Item("South Korea", "KR", color:  const Color(0xFF167F67),),
+    const Item("Mexico", "MX", color:  const Color(0xFF167F67),),
+    const Item("Morocco", "MA", color:  const Color(0xFF167F67),),
+    const Item("Netherlands", "NL", color:  const Color(0xFF167F67),),
+    const Item("New Zealand", "NZ", color:  const Color(0xFF167F67),),
+    const Item("Norway", "NO", color:  const Color(0xFF167F67),),
+    const Item("Peru", "PE", color:  const Color(0xFF167F67),),
+    const Item("Poland", "PL", color:  const Color(0xFF167F67),),
+    const Item("Portugal", "PL", color:  const Color(0xFF167F67),),
+    const Item("Russia", "RU", color:  const Color(0xFF167F67),),
+    const Item("Saudi Arabia", "SA", color:  const Color(0xFF167F67),),
+    const Item("South Africa", "ZA", color:  const Color(0xFF167F67),),
+    const Item("Spain", "ES", color:  const Color(0xFF167F67),),
+    const Item("Sweden", "SE", color:  const Color(0xFF167F67),),
+    const Item("Switzerland", "CH", color:  const Color(0xFF167F67),),
+    const Item("Turkey", "TR", color:  const Color(0xFF167F67),),
+    const Item("Ukraine", "UA", color:  const Color(0xFF167F67),),
+    const Item("Uruguay", "UY", color:  const Color(0xFF167F67),),
+    const Item("Venezuela", "VE", color:  const Color(0xFF167F67),),
+  ];
+
+
+
   List<Item> genresList = <Item>[];
 
   final _formKey = GlobalKey<FormState>();
@@ -69,15 +123,14 @@ class MyFormState extends State<MyForm> {
   static const String API_KEY = "wr5ynMSsGG9XotdznZnMhXL53ArluVoE";
   static const BASE_EVENTS_API = "https://app.ticketmaster.com/discovery/v2/events.json?";
   static const BASE_GENRE_API = "https://app.ticketmaster.com/discovery/v2/classifications/";
-  static const SIZE_API_FLAG = "&size=";
+  static const SIZE_FLAG = "&size=";
   static const API_FLAG = "&apikey=" + API_KEY;
-  static const COUNTRY_API_FLAG = "&countryCode=";
-  static String city;
-  static String genre;
-  static DateTime startDate;
-  static DateTime endDate;
+  static const COUNTRY_FLAG = "&countryCode=";
+  static const CITY_FLAG = "&city=";
+  static const CATEGORY_FLAG = "&categoryId=";
+  static const GENRE_FLAG = "&genreId=";
+  static const KEYWORD_FLAG = "&keyword=";
 
-  static String selectedCat;
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +142,13 @@ class MyFormState extends State<MyForm> {
         children: <Widget>[
           //TODO: Padding dels tres camps de cerca, i un border pa que este bonito
 
-
           //KeyValuePairDropdown(),
+          addCountryForm(),
           addCityForm(),
+          categoryDropDown(),
           genreDropDown(),
-          subGenreDropDown(),
 
-          addKeyWord(),
+          addKeyword(),
           addStartDateField(),
           addEndDateField(),
 
@@ -122,6 +175,35 @@ class MyFormState extends State<MyForm> {
     );
   }
 
+  addCountryForm() {
+    return DropdownButton<Item>(
+      hint:  Text("Country"),
+      value: selectedCountry,
+      onChanged: (Item Value) {
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text('Processing Data')));
+        setState(() {
+          selectedCountry = Value;
+
+        });
+      },
+      items: _country.map((Item country) {
+        return  DropdownMenuItem<Item>(
+          value: country,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 10,),
+              Text(
+                country.name,
+                style:  TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   addCityForm() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -134,8 +216,6 @@ class MyFormState extends State<MyForm> {
 
         ),
 
-
-
         /*
               border: new OutlineInputBorder(
                 borderRadius: new BorderRadius.circular(18.0),
@@ -147,16 +227,12 @@ class MyFormState extends State<MyForm> {
       ),
 
       validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }else{
-          city = value;
-        }
+          selectedCity = value;
       },
     );
   }
 
-  addKeyWord() {
+  addKeyword() {
     return TextFormField(
       decoration: const InputDecoration(
         icon: Icon(Icons.search),
@@ -170,11 +246,7 @@ class MyFormState extends State<MyForm> {
         labelText: 'Keyword',
       ),
       validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }else{
-          genre = value;
-        }
+          selectedKeyword = value;
       },
     );
   }
@@ -204,11 +276,7 @@ class MyFormState extends State<MyForm> {
             lastDate: DateTime(2100));
       },
       validator: (value) {
-        if (value.isBefore(new DateTime.now())) {
-          return 'Please enter some text';
-        }else{
           startDate = value;
-        }
       },
     );
   }
@@ -238,27 +306,21 @@ class MyFormState extends State<MyForm> {
             lastDate: DateTime(2100));
       },
       validator: (value) {
-        if (value.isBefore(new DateTime.now())) {
-          return 'Please enter some text';
-        }else{
           endDate = value;
-        }
       },
     );
   }
 
-  genreDropDown() {
+  categoryDropDown() {
     return DropdownButton<Item>(
       hint:  Text("Category"),
-      value: selectedUser,
+      value: selectedCategory,
       onChanged: (Item Value) {
         Scaffold.of(context)
             .showSnackBar(SnackBar(content: Text('Processing Data')));
-        selectedSubGenre = null;
-        print("emptying genreslist");
+        selectedCategory = null;
         setState(() {
-          selectedCat = Value.id;
-          selectedUser = Value;
+          selectedCategory = Value;
           midGenreApiCall();
 
         });
@@ -280,13 +342,13 @@ class MyFormState extends State<MyForm> {
     );
   }
 
-  subGenreDropDown() {
+  genreDropDown() {
     return DropdownButton<Item>(
       hint:  Text("Genre"),
-      value: selectedSubGenre,
+      value: selectedGenre,
       onChanged: (Item Value) {
         setState(() {
-          selectedSubGenre = Value;
+          selectedGenre = Value;
         });
       },
       items: genresList.map((Item subgenre) {
@@ -307,7 +369,7 @@ class MyFormState extends State<MyForm> {
   }
 
   dynamic callAPIEvents() async {
-    String apiCall = BASE_EVENTS_API + SIZE_API_FLAG + "10" + API_FLAG + COUNTRY_API_FLAG + city;
+    String apiCall = BASE_EVENTS_API + SIZE_FLAG + "10" + API_FLAG + COUNTRY_FLAG + selectedCountry.id + CITY_FLAG + selectedCity + CATEGORY_FLAG + selectedCategory.id + GENRE_FLAG + selectedGenre.id;
     print(apiCall);
     var response = await http.get(
         Uri.encodeFull(apiCall),
@@ -333,7 +395,6 @@ class MyFormState extends State<MyForm> {
     });
   }
 
-
   void midGenreApiCall() {
     callAPIGenres().then((value) {
       // Run extra code here
@@ -343,7 +404,7 @@ class MyFormState extends State<MyForm> {
   }
 
   dynamic callAPIGenres() async {
-    String apiCall = BASE_GENRE_API + selectedCat + ".json?" + API_FLAG;
+    String apiCall = BASE_GENRE_API + selectedCategory.id + ".json?" + API_FLAG;
     var response = await http.get(
         Uri.encodeFull(apiCall),
         headers: {"Accept": "application/json"}

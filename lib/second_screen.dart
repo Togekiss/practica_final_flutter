@@ -17,13 +17,18 @@ class SecondScreen extends StatefulWidget{
 class _SecondScreen extends State<SecondScreen> {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Ticketmaster Form';
+    final appTitle = 'Search parameters';
 
     return Scaffold(
+      backgroundColor: Colors.grey[1000],
+      //resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         title: Text(appTitle),
       ),
-      body: MyForm(),
+      body: SingleChildScrollView(
+        child: MyForm(),
+      ),
     );
   }
 }
@@ -137,38 +142,44 @@ class MyFormState extends State<MyForm> {
     // Crea un widget Form usando el _formKey que creamos anteriormente
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
 
-          //KeyValuePairDropdown(),
-          addCountryForm(),
-          addCityForm(),
-          categoryDropDown(),
-          genreDropDown(),
+            //KeyValuePairDropdown(),
+            addCountryForm(),
+            addCityForm(),
+            categoryDropDown(),
+            genreDropDown(),
 
-          addKeyword(),
-          addStartDateField(),
-          addEndDateField(),
+            addKeyword(),
+            addStartDateField(),
+            addEndDateField(),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-            child: RaisedButton(
-              onPressed: () {
-                // devolverá true si el formulario es válido, o falso si
-                // el formulario no es válido.
-                if (_formKey.currentState.validate()) {
-                  // Si el formulario es válido, queremos mostrar un Snackbar
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                  midEventsApiCall();
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ),
-        ],
-      ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                child: RaisedButton(
+                  onPressed: () {
+                    // devolverá true si el formulario es válido, o falso si
+                    // el formulario no es válido.
+                    if (_formKey.currentState.validate()) {
+                      // Si el formulario es válido, queremos mostrar un Snackbar
+                      Scaffold.of(context)
+                          .showSnackBar(SnackBar(content: Text('Processing Data')));
+                      midEventsApiCall();
+                    }
+                  },
+                  child: Text('Submit'),
+                ),
+              ),
+            )
+          ],
+        ),
+      ) 
+      
     );
   }
 
@@ -178,7 +189,7 @@ class MyFormState extends State<MyForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: ImageIcon(AssetImage("images/world.png")),
-            labelText: 'Country',
+            //labelText: 'Country',
             errorText: state.hasError ? state.errorText : null,
           ),
           child: new DropdownButtonHideUnderline(
@@ -248,7 +259,7 @@ class MyFormState extends State<MyForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: Icon(Icons.category),
-            labelText: 'Category',
+            //labelText: 'Category',
             errorText: state.hasError ? state.errorText : null,
           ),
           child: new DropdownButtonHideUnderline(
@@ -294,7 +305,7 @@ class MyFormState extends State<MyForm> {
         return InputDecorator(
           decoration: InputDecoration(
             icon: ImageIcon(AssetImage("images/genre.png")),
-            labelText: 'Genre',
+            //labelText: 'Genre',
             errorText: state.hasError ? state.errorText : null,
           ),
           child: new DropdownButtonHideUnderline(
@@ -350,7 +361,7 @@ class MyFormState extends State<MyForm> {
             AssetImage("images/calendar.png")
         ),
         hintText: 'Select a date',
-        labelText: 'Date',
+        labelText: 'Start date',
       ),
       format: format,
       onShowPicker: (context, currentValue) {
@@ -374,7 +385,7 @@ class MyFormState extends State<MyForm> {
             AssetImage("images/calendar.png")
         ),
         hintText: 'Select a date',
-        labelText: 'Date',
+        labelText: 'End date',
       ),
       format: format,
       onShowPicker: (context, currentValue) {
@@ -391,7 +402,7 @@ class MyFormState extends State<MyForm> {
   }
 
   dynamic callAPIEvents() async {
-    String apiCall = BASE_EVENTS_API + SIZE_FLAG + "10" + API_FLAG + COUNTRY_FLAG + selectedCountry.id + CITY_FLAG + selectedCity + CATEGORY_FLAG + selectedCategory.id + GENRE_FLAG + selectedGenre.id;
+    String apiCall = BASE_EVENTS_API + SIZE_FLAG + "20" + API_FLAG + COUNTRY_FLAG + selectedCountry.id + CITY_FLAG + selectedCity + CATEGORY_FLAG + selectedCategory.id + GENRE_FLAG + selectedGenre.id;
     print(apiCall);
     var response = await http.get(
         Uri.encodeFull(apiCall),

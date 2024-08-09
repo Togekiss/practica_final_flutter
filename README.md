@@ -1,6 +1,6 @@
 # practica_final
 
-A new Flutter application.
+Flutter application to view (mocked up) information about activities in a chosen city
 
 ## Getting Started
 
